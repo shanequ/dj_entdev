@@ -1,0 +1,11 @@
+
+__pycache__/
+*.log
+*.py[cod]
+*$py.class
+db.*
+*.prof
+venv/
+media/
+book_materials/
+.idea/
