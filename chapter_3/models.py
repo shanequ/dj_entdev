@@ -15,6 +15,8 @@ MAKE_CHOICES = (
     (2, 'Chevrolet'),
 )
 
+MAKE_CHOICES_DICT = dict(MAKE_CHOICES)
+
 
 class VehicleModel(models.Model):
     name = models.CharField(
@@ -30,6 +32,7 @@ class VehicleModel(models.Model):
             models.Index(fields=['-name'], name='desc_name_idx'),
             models.Index(Lower('name').desc(), name='lower_name_idx'),
         ]
+
 
 class Engine(models.Model):
     name = models.CharField(
@@ -67,6 +70,11 @@ class Vehicle(models.Model):
         verbose_name='Vehicle Make/Brand',
     )
 
+    def __str__(self):
+        return f'{MAKE_CHOICES_DICT.get(self.make)} {self.vehicle_model.name}'
+
+    def full_vehicle_name(self):
+        return f'{self.__str__()}-{self.engine.name}'
 
 
 class Seller(models.Model):
