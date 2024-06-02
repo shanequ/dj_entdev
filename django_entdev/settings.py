@@ -163,3 +163,4 @@ CURRENCY_CHOICES = [
 ]
 
 
+AUTH_USER_MODEL = 'chapter_3.Seller'

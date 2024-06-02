@@ -1,3 +1,6 @@
+
+from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 from django.db.models.functions import Lower
 from djmoney.models.fields import MoneyField
@@ -20,7 +23,12 @@ MAKE_CHOICES_DICT = dict(MAKE_CHOICES)
 
 class VehicleModel(models.Model):
     name = models.CharField(
-        verbose_name='Model', max_length=75, unique=True, blank=True, null=True
+        verbose_name='Model', max_length=75, unique=True,
+        blank=True, null=True,  # db_index=True
+        validators=[
+            MinLengthValidator(3),
+            MaxLengthValidator(75),
+        ]
     )
 
     class Meta:
@@ -74,14 +82,18 @@ class Vehicle(models.Model):
         return f'{MAKE_CHOICES_DICT.get(self.make)} {self.vehicle_model.name}'
 
     def full_vehicle_name(self):
-        return f'{self.__str__()}-{self.engine.name}'
+        return f'{self.__str__()} - {self.engine.name}'
+
+    @property
+    def fullname(self):
+        return f'{self.__str__()} - {self.engine.name}'
 
 
-class Seller(models.Model):
+class Seller(AbstractUser):
     name = models.CharField(
         verbose_name='Seller Name', max_length=150, blank=True, null=True
     )
-    vehicle = models.ForeignKey(
-        Vehicle, blank=True, verbose_name='Vehicles', on_delete=models.CASCADE,
+    vehicle = models.ManyToManyField(
+        Vehicle, blank=True, verbose_name='Vehicles',
         related_name='vehicle_sellers', related_query_name='vehicle_seller',
     )

@@ -9,3 +9,4 @@ venv/
 media/
 book_materials/
 .idea/
+.DS_Store

@@ -1,7 +1,7 @@
 ## Project Info
 
 > BooK: Becoming an Enterprise Django Developer  
-> Link to [Sample code at Github](https://github.com/packtPublishing/Becoming-an-Enterprise-Django-Developer)  
+> Link to [Sample code at GitHub](https://github.com/packtPublishing/Becoming-an-Enterprise-Django-Developer)  
 
 
 ## Important Packages
