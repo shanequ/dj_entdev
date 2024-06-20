@@ -2,6 +2,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
+from django.db.models import Count
 from django.db.models.functions import Lower
 from djmoney.models.fields import MoneyField
 from djmoney.models.validators import MaxMoneyValidator, MinMoneyValidator
@@ -15,7 +16,7 @@ YESNO_CHOICES = (
 MAKE_CHOICES = (
     (1, 'Buick'),
     (2, 'Cadillac'),
-    (2, 'Chevrolet'),
+    (3, 'Chevrolet'),
 )
 
 MAKE_CHOICES_DICT = dict(MAKE_CHOICES)
@@ -29,6 +30,11 @@ class VehicleModel(models.Model):
             MinLengthValidator(3),
             MaxLengthValidator(75),
         ]
+    )
+
+    make = models.PositiveSmallIntegerField(
+        choices=MAKE_CHOICES, blank=True, null=True,
+        verbose_name='Vehicle Model Make/Brand',
     )
 
     class Meta:
@@ -51,6 +57,22 @@ class Engine(models.Model):
         verbose_name='Model', related_name='model_engine',
     )
 
+
+
+class BuickVehicleModel(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(make=1)
+
+
+class ChevyVehicleModel(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(make=3)
+
+
+class MakeCounterModel(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset().values("make").annotate(c=Count("make"))
 
 class Vehicle(models.Model):
     vin = models.CharField(
@@ -87,6 +109,11 @@ class Vehicle(models.Model):
     @property
     def fullname(self):
         return f'{self.__str__()} - {self.engine.name}'
+
+    buicks = BuickVehicleModel()
+    chevys = ChevyVehicleModel()
+    objects = models.Manager()
+    make_counter = MakeCounterModel()
 
 
 class Seller(AbstractUser):

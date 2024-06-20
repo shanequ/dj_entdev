@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'djmoney',
     'debug_toolbar',
     'chapter_3.apps.Chapter3Config',
+    'chapter_4.apps.Chapter4Config',
 ]
 
 MIDDLEWARE = [
